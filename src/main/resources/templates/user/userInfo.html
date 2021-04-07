@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${user.getUsername()}"></title>
+    <link th:href="@{/css/pageStyle.css}" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div class="main-block">
+    <header th:insert="fragments/header"></header>
+    <div th:insert="fragments/userAccountBlock"></div>
+    <div class="element-block">
+        <p> Пользователь: <a th:text="${user.getUsername()}"></a></p>
+        <p> Комментариев: <a th:text="${user.getCommentsList().size()}"></a></p>
+        <p><a sec:authorize ="hasAuthority('ADMIN')" th:href="@{/users/{username}/comments(username=${user.getUsername()})}">Все комментарии пользователя</a></p>
+        <p><a sec:authorize ="hasAuthority('ADMIN')" th:href="@{/users/{username}/edit(username=${user.getUsername()})}"> Редактировать</a></p>
+        <form sec:authorize ="hasAuthority('ADMIN')" th:method="DELETE" th:action="@{/users/{username}(username=${user.getUsername()})}">
+            <input type="submit" value="Удалить пользователя"/>
+        </form>
+    </div>
+    <div class="element-block">
+        <p>Статьи пользователя: </p>
+        <div class="inner-block" th:each="article : ${user.getArticleList()}">
+            <p><a class="link-text-without-decoration" th:href="@{/articles/{articleId}(articleId=${article.getArticleId()})}" th:text="${article.getTitle()}"></a></p>
+
+        </div>
+    </div>
+</div>
+</body>
+</html>

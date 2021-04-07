@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Все статьи</title>
+</head>
+<body>
+<div class="main-block">
+    <header th:insert="fragments/header"></header>
+    <div th:insert="fragments/userAccountBlock"></div>
+    <form class="element-block" th:action="@{/articles/search}">
+        <p class="link-text-without-decoration"> Поиск статьи:
+            <input type="text" name="search"/>
+            <input type="submit" value="Поиск"/>
+        </p>
+    </form>
+    <div class="element-block" th:if="${articleList.size() == 0}">
+        <p class="title-text" >Статей не найдено!</p>
+    </div>
+    <div class="element-block" th:each="article : ${articleList}">
+        <a class="title-text" th:href="@{/articles/{articleId}(articleId=${article.getArticleId()})}" th:text="${article.getTitle()}">Заголовок стати</a>
+        <p>Дата: <a th:text="${#dates.format(article.getArticleDate(), 'yyyy.MM.dd HH:mm')}"></a></p>
+        <p> <img th:src="@{/img/{articleFileName}(articleFileName=${article.getArticleImageName()})}"  class="image"/></p>
+        <p class="news-short-text" th:text="${article.getArticleText()}"></p>
+        <a class="link-text-without-decoration" th:href="@{/articles/{articleId}#comments(articleId=${article.getArticleId()})}" th:text="'Комментарии: ' + ${article.getCommentsList().size()}" >Комментарии</a>
+        <p></p>
+    </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Создать новую статью</title>
+    <link th:href="@{/css/pageStyle.css}" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div class="main-block">
+    <header th:insert="fragments/header"></header>
+    <div th:insert="fragments/userAccountBlock"></div>
+    <form th:action="@{/articles}" th:method="POST" enctype="multipart/form-data">
+        <div class="element-block">
+            <p class="title-text">Название статьи : </p>
+            <p><input type="text" name="title" size = "100" required/></p>
+        </div>
+        <div class="element-block">
+            <p class="title-text"> Изображение в заголовке: </p>
+            <input type="file" name="file">
+        </div>
+        <div class="element-block">
+            <p class="title-text">Текст статьи : </p>
+            <p><textarea rows="20" cols="90" name="articleText" required></textarea></p>
+            <input type="submit" value="Создать"/>
+        </div>
+    </form>
+</div>
+</body>
+</html>

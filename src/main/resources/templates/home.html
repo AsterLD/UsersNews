@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Главная</title>
+    <link th:href="@{/css/pageStyle.css}" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div class="main-block">
+    <header th:insert="fragments/header"></header>
+    <div th:insert="fragments/userAccountBlock"></div>
+    <div class="element-block" th:if="${articleList.size() == 0}">
+        <p class="title-text" >Новых статей нет</p>
+    </div>
+    <div class="element-block" th:each="article : ${articleList}">
+        <a class="title-text" th:href="@{/articles/{articleId}(articleId=${article.getArticleId()})}" th:text="${article.getTitle()}">Заголовок стати</a>
+        <p>Дата: <a th:text="${#dates.format(article.getArticleDate(), 'yyyy.MM.dd HH:mm')}"></a></p>
+        <p> <img th:src="@{/img/{articleFileName}(articleFileName=${article.getArticleImageName()})}"  class="image"/></p>
+        <p class="news-short-text" th:text="${article.getArticleText()}"></p>
+        <a class="link-text-without-decoration" th:href="@{/articles/{articleId}#comments(articleId=${article.getArticleId()})}" th:text="'Комментарии: ' + ${article.getCommentsList().size()}" >Комментарии</a>
+        <p></p>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Все комментарии пользователя</title>
+</head>
+<body>
+<div class="main-block">
+    <header th:insert="fragments/header"></header>
+    <div th:insert="fragments/userAccountBlock"></div>
+    <div class="element-block" th:if="${commentsList.size() == 0}"><p>Комментариев нет!</p></div>
+    <div class="element-block" th:each="comment : ${commentsList}">
+        <p>Статья: <a th:href="@{/articles/{articleId}#comments(articleId=${comment.getArticle().getArticleId()})}"
+                     th:text="${comment.getArticle().getTitle()}"></a></p>
+        <p>Дата: <a th:text="${#dates.format(comment.getCommentDate(), 'yyyy.MM.dd HH:mm:ss')}"></a></p>
+        <p>Комментарий: <a th:text="${comment.getCommentText()}"></a></p>
+        <form th:method="DELETE"
+              th:action="@{/articles/{articleId}/comments/{commentId}
+                      (articleId=${comment.getArticle().getArticleId()},commentId=${comment.getCommentId()})}"
+              sec:authorize ="hasAnyAuthority( 'EDITOR', 'ADMIN')">
+            <p><input type="submit" value="Удалить комментарий"/></p>
+        </form>
+    </div>
+</div>
+</body>
+</html>

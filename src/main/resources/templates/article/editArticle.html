@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Редактирование статьи</title>
+    <link th:href="@{/css/pageStyle.css}" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div class="main-block">
+    <header th:insert="fragments/header"></header>
+    <div th:insert="fragments/userAccountBlock"></div>
+    <form class="element-block" th:action="@{/articles/{articleId}/img(articleId=${article.getArticleId()})}" th:method="PATCH" enctype="multipart/form-data">
+        <p class="title-text">Изображение в заголовке:</p>
+        <p> <img th:name="file" th:src="@{/img/{articleFileName}(articleFileName=${article.getArticleImageName()})}"  style="width:750px;height:422px"/></p>
+        <p>Выбрать другое изображение: </p>
+        <input type="file" name="file">
+        <p><input type="submit" value="Обновить изображение"/></p>
+    </form>
+    <form class="element-block" th:action="@{/articles/{articleId}(articleId=${article.getArticleId()})}" th:method="PATCH" enctype="multipart/form-data">
+        <p class="title-text">Название статьи (не более 200 символов):</p>
+        <input type="text" name="title" th:value="${article.getTitle()}" size = "100" required/>
+        <p class="title-text">Текст статьи:</p>
+        <textarea rows="20" cols="100" name="articleText" th:text="${article.getArticleText()}" required></textarea>
+        <p><input type="submit" value="Внести изменения"/></p>
+    </form>
+</div>
+</body>
+</html>

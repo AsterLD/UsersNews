@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link th:href="@{/css/headerStyle.css}" rel="stylesheet" type="text/css" />
+</head>
+<div th:fragment="header" class="header-block">
+    <header>
+        <a class="header-text" th:href="@{/}">Главная</a>
+        <a class="header-text" th:href="@{/articles}">Статьи</a>
+        <a class="header-text" th:href="@{/users}">Пользователи</a>
+        <a sec:authorize ="hasAnyAuthority( 'EDITOR', 'ADMIN')" class="header-text" th:href="@{/articles/unapproved}">Непроверенные статьи</a>
+
+    </header>
+</div>
+</html>

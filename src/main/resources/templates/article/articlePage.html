@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${article.getTitle()}"></title>
+    <link th:href="@{/css/pageStyle.css}" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div class="main-block">
+    <header th:insert="fragments/header"></header>
+    <div th:insert="fragments/userAccountBlock"></div>
+    <div th:class="element-block">
+        <a class="title-text" th:text="${article.getTitle()}"></a>
+        <p >Автор: <a th:href="@{/users/{username}(username=${article.getUser().getUsername()})}" th:text="${article.getUser().getUsername()}"></a></p>
+        <p>Дата: <a th:text="${#dates.format(article.getArticleDate(), 'yyyy.MM.dd HH:mm')}"></a></p>
+        <img th:src="@{/img/{articleFileName}(articleFileName=${article.getArticleImageName()})}"  class="image" />
+        <p><a th:text="${article.getArticleText()}"></a></p>
+    </div>
+    <div th:class="element-block">
+        <form sec:authorize ="!isAnonymous()" th:method="POST" th:action="@{/articles/{articleId}/comments/(articleId=${article.getArticleId()})}">
+            <p>Добавить комментарий:</p>
+            <p><input type="text" name="commentText" size = "100" required></p>
+            <p><input type="submit" value="Добавить комментарий"/></p>
+        </form>
+        <p sec:authorize ="isAnonymous()">
+            Зарегистрируйтесь или войдите, чтобы оставить комментарий</p>
+        <h3 id="comments">Комментарии: <a th:text="${article.getCommentsList().size()}"></a></h3>
+        <div class="inner-block" th:each="comment : ${article.getCommentsList()}" th:id="${comment.getCommentId()}">
+            <p><a class="link-text-without-decoration" th:href="@{/users/{username}(username=${comment.getUser().getUsername()})}" th:text="${comment.getUser().getUsername()}"></a></p>
+            <p><a th:text="${#dates.format(comment.getCommentDate(), 'yyyy.MM.dd HH:mm:ss')}"></a></p>
+            <h4 th:text="${comment.getCommentText()}"></h4>
+            <form th:method="DELETE"
+                  th:action="@{/articles/{articleId}/comments/{commentId}
+                      (articleId=${article.getArticleId()},commentId=${comment.getCommentId()})}"
+                  sec:authorize ="hasAnyAuthority( 'EDITOR', 'ADMIN')">
+                <p><input type="submit" value="Удалить комментарий"/></p>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

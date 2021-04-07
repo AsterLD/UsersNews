@@ -1,0 +1,74 @@
+.main-block {
+    margin-left: auto;
+    margin-right: auto;
+    width: 1300px;
+}
+
+.element-block {
+    float: left;
+    width: 75%;
+    border: 2px solid;
+    display: inline-block;
+    margin-top: 15px;
+    padding: 10px;
+}
+
+.inner-block {
+    float: left;
+    width: 95%;
+    border: 2px solid;
+    display: inline-block;
+    margin-top: 15px;
+    padding: 10px;
+}
+
+.right-column {
+    float: right;
+    width: 20%;
+    text-align: center;
+    display: inline-block;
+    border: 2px solid;
+    margin-top: 15px;
+    padding: 10px;
+}
+
+.authorization-block {
+    width: 30%;
+    padding: 20px;
+    text-align: center;
+    border: 2px solid;
+    margin-top: 15px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.title-text {
+    color: black;
+    font-size: 26px;
+    text-decoration: none;
+}
+
+.middle-text {
+    color: black;
+    font-size: 20px;
+    text-decoration: none;
+}
+
+.link-text-without-decoration {
+    color: black;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.news-short-text {
+    white-space: nowrap;
+    overflow: hidden;
+    padding: 5px;
+    text-overflow: ellipsis;
+}
+
+.image {
+    width: 60%;
+    display: block;
+    margin: 0 auto;
+}

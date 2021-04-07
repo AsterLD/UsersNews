@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link th:href="@{/css/pageStyle.css}" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<form class="right-column" th:action="@{/login}" method="POST" sec:authorize ="isAnonymous()">
+    <p>Имя пользователя:</p>
+    <p><input type="text" name="username"/></p>
+    <p>Пароль:</p>
+    <p><input type="password" name="password"/></p>
+    <p><input type="submit" value="Войти"/></p>
+    <p><a class="link-text-without-decoration" th:href="@{/registration}">Регистрация</a></p>
+</form>
+<form class="right-column" th:action="@{/logout}" th:method="GET" sec:authorize ="!isAnonymous()">
+    <a class="title-text" th:href="@{/users/{username}(username=${#authentication.getName()})}" th:text="${#authentication.getName()}"></a>
+    <hr/>
+    <p><a class="link-text-without-decoration" th:href="@{/users/{username}/comments(username=${#authentication.getName()})}">Мои комментарии</a></p>
+    <p><a class="link-text-without-decoration" th:href="@{/users/{username}/articles(username=${#authentication.getName()})}">Мои статьи</a></p>
+    <p><a class="link-text-without-decoration" th:href="@{/articles/new}">Добавить новую статью</a></p>
+    <hr/>
+    <p><input type="submit" value="Выйти"/></p>
+</form>
+</body>
+</html>

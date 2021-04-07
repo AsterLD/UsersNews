@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Изменить данные пользователя</title>
+</head>
+<body>
+<div class="main-block">
+    <header th:insert="fragments/header"></header>
+    <div th:insert="fragments/userAccountBlock"></div>
+    <form class="element-block" th:action="@{/users/{username}/edit(username=${user.getUsername()})}" th:method="PATCH">
+        <p th:if="${message}" th:text="${message}"></p>
+        <p>Имя пользователя : <input type="text" th:name="username" th:value="${user.getUsername()}" required/></p>
+        <p><input type="hidden" th:name="userId" th:value="${user.getUserId()}" /></p>
+        <p>Пользователь активен: <input type="checkbox" name="isEnabled" th:checked="${user.isEnabled()}"/></p>
+        <p>Роли:</p>
+        <div th:each="role : ${T(com.ld.usersnews.models.Role).values()}">
+            <input type="checkbox"
+                   th:value="${role}"
+                   th:name="${role}"
+                   th:text="${role}"
+                   th:checked="${user.getRoles().contains(role)}">
+        </div>
+        <p><input type="submit" value="Обновить"/> </p>
+    </form>
+</div>
+</body>
+</html>
