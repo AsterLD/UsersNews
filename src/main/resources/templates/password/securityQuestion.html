@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link th:href="@{/css/pageStyle.css}" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div class="main-block">
+    <header th:insert="fragments/header"></header>
+    <form class="authorization-block" th:action="@{/password/new}" th:method="POST">
+        <p><input type="hidden" th:name="username" th:value="${user.getUsername()}" /></p>
+        <p>Секретный вопрос:</p>
+        <p><a th:text="${user.getSecurityQuestion()}"></a></p>
+        <p>Ответ:</p>
+        <p><input type="text" name="answer"/></p>
+        <p>Новый пароль:</p>
+        <p><input type="password" name="password"/></p>
+        <p><input type="submit" value="Ответить"/> </p>
+    </form>
+</div>
+</body>
+</html>
