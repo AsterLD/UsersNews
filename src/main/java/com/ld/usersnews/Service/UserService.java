@@ -9,8 +9,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
-
-import java.sql.Array;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -46,6 +44,7 @@ public class UserService implements UserDetailsService {
         user.setCredentialsNonExpire(true);
         user.setRoles(Collections.singleton(Role.USER));
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setSecurityAnswer(passwordEncoder.encode(user.getSecurityAnswer()));
         userRepo.save(user);
         return "redirect:/login";
     }
