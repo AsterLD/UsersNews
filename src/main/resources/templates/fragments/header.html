@@ -10,8 +10,7 @@
         <a class="header-text" th:href="@{/}">Главная</a>
         <a class="header-text" th:href="@{/articles}">Статьи</a>
         <a class="header-text" th:href="@{/users}">Пользователи</a>
-        <a sec:authorize ="hasAnyAuthority( 'EDITOR', 'ADMIN')" class="header-text" th:href="@{/articles/unapproved}">Непроверенные статьи</a>
-
+        <a sec:authorize ="hasAnyAuthority( 'EDITOR', 'ADMIN')" class="header-text" th:href="@{/articles/unapproved/}">Непроверенные статьи</a>
     </header>
 </div>
 </html>

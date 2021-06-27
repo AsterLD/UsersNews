@@ -6,10 +6,14 @@ import com.ld.usersnews.models.User;
 import com.ld.usersnews.repos.ArticleRepo;
 import com.ld.usersnews.repos.CommentRepo;
 import com.ld.usersnews.repos.UserRepo;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
+
+import static com.ld.usersnews.util.PageListGenerator.generateAvailablePageList;
 
 @Service
 public class CommentService {
@@ -24,12 +28,14 @@ public class CommentService {
         this.articleRepo = articleRepo;
     }
 
-    public String findCommentListByUsername(String username, Model model) {
+    public String showCommentListByUsername(String username, Model model, int pageNumber) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (username.equals(SecurityContextHolder.getContext().getAuthentication().getName()) ||
                 authentication.getAuthorities().stream().anyMatch(r -> r.getAuthority().equals(Role.ADMIN.toString()))) {
             User user = userRepo.findUserByUsername(username);
-            model.addAttribute("commentsList", commentRepo.findCommentsByUser(user));
+            Page<Comment> contentPage = commentRepo.findCommentsByUser(user, PageRequest.of(pageNumber - 1, 5));
+            generateAvailablePageList(model, pageNumber, contentPage);
+            model.addAttribute("username", username);
             return "comment/userCommentsList";
         }
         return "redirect:/";

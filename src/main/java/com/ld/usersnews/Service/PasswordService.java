@@ -16,7 +16,29 @@ public class PasswordService {
         this.userRepo = userRepo;
     }
 
-    public String resetUserPassword(Model model, String username, String action) {
+    public String showChangeUserPasswordPage(Model model, String username) {
+        model.addAttribute("user", userRepo.findUserByUsername(username));
+        return "settings/changePassword";
+    }
+
+    public String changeUserPassword(String username,
+                                     String oldPassword,
+                                     String newPassword,
+                                     Model model) {
+        User user = userRepo.findUserByUsername(username);
+        if (passwordEncoder.matches(oldPassword, user.getPassword())) {
+            user.setPassword(passwordEncoder.encode(newPassword));
+            userRepo.save(user);
+            return "redirect:/logout";
+        }
+        else {
+            model.addAttribute("message", "Неверный пароль!");
+            model.addAttribute("user", userRepo.findUserByUsername(username));
+            return "settings/changePassword";
+        }
+    }
+
+    public String recoveryUserPassword(Model model, String username, String action) {
         if (userRepo.findUserByUsername(username) != null) {
             if (action.equals("reset")) {
                 return "password/reset";

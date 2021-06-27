@@ -1,7 +1,5 @@
 package com.ld.usersnews.controllers;
 
-import com.ld.usersnews.Service.ArticleService;
-import com.ld.usersnews.Service.CommentService;
 import com.ld.usersnews.Service.UserService;
 import com.ld.usersnews.models.User;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -14,45 +12,33 @@ import java.util.*;
 @RequestMapping("/users")
 public class UserController {
 
-    private final ArticleService articleService;
-    private final CommentService commentService;
     private final UserService userService;
 
-    public UserController(ArticleService articleService, CommentService commentService, UserService userService) {
-        this.articleService = articleService;
-        this.commentService = commentService;
+    public UserController(UserService userService) {
         this.userService = userService;
     }
 
     @GetMapping
-    public String showAllUsers(Model model) {
-        return userService.findAll(model);
+    public String showUserListPage(@RequestParam(defaultValue = "1") int page, Model model) {
+        return userService.findAll(model, page);
     }
 
     @GetMapping("/search")
-    public String findUsers(@RequestParam(name = "search", defaultValue = "") String search, Model model) {
-        return userService.searchUsers(search, model);
+    public String findUsers(@RequestParam(name = "search", defaultValue = "") String search,
+                            @RequestParam(defaultValue = "1") int page, Model model) {
+        return userService.searchUsers(search, model, page);
     }
 
     @GetMapping("/{username}")
-    public String userInfo(@PathVariable String username, Model model) {
-        return userService.findUser(username, model, "user/userInfo");
-    }
-
-    @GetMapping("/{username}/comments")
-    public String usersCommentsByUsername(@PathVariable String username, Model model) {
-        return commentService.findCommentListByUsername(username, model);
-    }
-
-    @GetMapping("/{username}/articles")
-    public String usersArticlesByUsername (@PathVariable String username, Model model) {
-        return articleService.showUserArticleList(username, model);
+    public String showUserInfoPage(@RequestParam(defaultValue = "1") int page,
+                                   @PathVariable String username, Model model) {
+        return userService.findUserInfo(username, model, "user/userInfoPage", page);
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/{username}/edit")
-    public String editUser(@PathVariable String username, Model model) {
-        return userService.findUser(username, model, "user/editUser");
+    public String showEditUserPage(@PathVariable String username, Model model) {
+        return userService.findUser(username, model, "user/editUserPage");
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")

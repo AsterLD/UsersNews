@@ -20,7 +20,7 @@ public class RegistrationController {
 
     @GetMapping()
     public String createNewUser() {
-        return "registration/newUser";
+        return "registration/registrationPage";
     }
 
     @PostMapping

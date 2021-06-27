@@ -18,38 +18,46 @@ public class ArticleController {
         this.articleService = articleService;
     }
 
-    @GetMapping()
-    public String allArticlesList(Model model) {
-        return articleService.showArticleListByIsApproved(true, model, "article/articleList");
+    @GetMapping
+    public String showArticleListPage(@RequestParam(defaultValue = "1") int page, Model model) {
+        return articleService.showArticleListByIsApproved(true, model, "article/articleList", page);
     }
 
     @GetMapping("/search")
-    public String searchResultArticlesList(String search, Model model) {
-        return articleService.showSearchArticleList(search, true, model);
+    public String searchResultArticlesList(@RequestParam (defaultValue = "") String search,
+                                           @RequestParam(defaultValue = "1") int page, Model model) {
+        return articleService.showArticleListSearchByTitle(search, true, model, page);
     }
 
+    @GetMapping("/user/{username}/")
+    public String showUserArticleListPage(@RequestParam(defaultValue = "1") int page,
+                                          @PathVariable String username, Model model) {
+        return articleService.showUserArticleList(username, model, page);
+    }
+
+    @PreAuthorize("hasAnyAuthority('ADMIN','EDITOR')")
     @GetMapping("/unapproved")
-    public String unapprovedArticleList(Model model) {
-        return articleService.showArticleListByIsApproved(false, model, "article/unapprovedArticles");
+    public String showUnapprovedArticleList(@RequestParam(defaultValue = "1") int page, Model model) {
+        return articleService.showArticleListByIsApproved(false, model, "article/unapprovedArticleList", page);
     }
 
     @GetMapping("/{articleId}")
-    public String showArticle(@PathVariable Long articleId, Model model) {
+    public String showArticlePage(@PathVariable Long articleId, Model model) {
         return articleService.showArticleById(articleId, model);
     }
 
     @GetMapping("/new")
-    public String createArticle() {
-        return "article/newArticle";
+    public String showCreateArticlePage() {
+        return "article/createArticlePage";
     }
 
     @PostMapping
     public String addArticle(@RequestParam("file") MultipartFile file, Article article) {
-        return articleService.addArticle(file, article, "redirect:");
+        return articleService.addArticle(file, article, "redirect:/");
     }
 
     @GetMapping("/{articleId}/edit")
-    public String editArticle(@PathVariable Long articleId, Model model) {
+    public String showEditArticlePage(@PathVariable Long articleId, Model model) {
         return articleService.showArticleToEdit(articleId, model);
     }
 

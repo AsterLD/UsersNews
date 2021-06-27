@@ -9,13 +9,13 @@
 <div class="main-block">
     <header th:insert="fragments/header"></header>
     <div th:insert="fragments/userAccountBlock"></div>
-    <div class="element-block" th:if="${articleList.size() == 0}">
+    <div class="element-block" th:if="${mainElementList.size() == 0}">
         <p class="title-text" >Непроверенных статей нет!</p>
     </div>
-    <div class="element-block" th:each="article : ${articleList}">
+    <div class="element-block" th:each="article : ${mainElementList}">
         <a class="title-text" th:href="@{/articles/{articleId}(articleId=${article.getArticleId()})}" th:text="${article.getTitle()}">Заголовок стати</a>
         <p>Дата: <a th:text="${#dates.format(article.getArticleDate(), 'yyyy.MM.dd HH:mm')}"></a></p>
-        <p> <img th:src="@{/img/{articleFileName}(articleFileName=${article.getArticleImageName()})}"  class="image"/></p>
+        <p> <img th:if="${article.getArticleImageName() != null}" th:src="@{/img/{articleFileName}(articleFileName=${article.getArticleImageName()})}"  class="image"/></p>
         <p class="news-short-text" th:text="${article.getArticleText()}"></p>
         <a th:href="@{/articles/{articleId}#comments(articleId=${article.getArticleId()})}" th:text="'Комментарии: ' + ${article.getCommentsList().size()}" >Комментарии</a>
         <div>
@@ -23,10 +23,22 @@
                 <p><input type="submit" value="Утвердить статью"/></p>
             </form>
             <form th:action="@{/articles/{articleId}(articleId=${article.getArticleId()})}" th:method="DELETE">
-                <p><input type="submit" value="Удалить"/></p>
+                <p><input type="submit" value="Удалить статью"/></p>
             </form>
         </div>
     </div>
+    <div class="pagination">
+        <div class="pagination-navigation" th:each="availablePage : ${availablePagesList}">
+            <a class="pagination-navigation-active-element"
+               th:if="${availablePage != pageNumber}"
+               th:text="${availablePage}"
+               th:href="@{/articles/unapproved(page=${availablePage})}">
+            </a>
+            <a class="pagination-navigation-inactive-element"
+               th:unless="${availablePage != pageNumber}"
+               th:text="${availablePage}">
+            </a>
+        </div>
 </div>
 </body>
 </html>

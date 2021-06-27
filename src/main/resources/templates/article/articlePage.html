@@ -13,7 +13,7 @@
         <a class="title-text" th:text="${article.getTitle()}"></a>
         <p >Автор: <a th:href="@{/users/{username}(username=${article.getUser().getUsername()})}" th:text="${article.getUser().getUsername()}"></a></p>
         <p>Дата: <a th:text="${#dates.format(article.getArticleDate(), 'yyyy.MM.dd HH:mm')}"></a></p>
-        <img th:src="@{/img/{articleFileName}(articleFileName=${article.getArticleImageName()})}"  class="image" />
+        <img th:if="${article.getArticleImageName() != null}" th:src="@{/img/{articleFileName}(articleFileName=${article.getArticleImageName()})}"  class="image" />
         <p><a th:text="${article.getArticleText()}"></a></p>
     </div>
     <div th:class="element-block">

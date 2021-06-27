@@ -1,11 +1,11 @@
 package com.ld.usersnews.controllers;
 
 import com.ld.usersnews.Service.ArticleService;
-import com.ld.usersnews.models.Article;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequestMapping("/")
@@ -18,7 +18,7 @@ public class MainPageController {
     }
 
     @GetMapping
-    public String ShowUserFeed(Article article, Model model) {
-        return articleService.showArticleListByIsApproved(true, model, "home");
+    public String showMainPage(@RequestParam(defaultValue = "1") int page, Model model) {
+        return articleService.showArticleListByIsApproved (true, model, "homePage", page);
     }
 }

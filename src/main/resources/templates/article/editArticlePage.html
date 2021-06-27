@@ -11,7 +11,7 @@
     <div th:insert="fragments/userAccountBlock"></div>
     <form class="element-block" th:action="@{/articles/{articleId}/img(articleId=${article.getArticleId()})}" th:method="PATCH" enctype="multipart/form-data">
         <p class="title-text">Изображение в заголовке:</p>
-        <p> <img th:name="file" th:src="@{/img/{articleFileName}(articleFileName=${article.getArticleImageName()})}"  style="width:750px;height:422px"/></p>
+        <p> <img th:if="${article.getArticleImageName() != null}" th:name="file" th:src="@{/img/{articleFileName}(articleFileName=${article.getArticleImageName()})}"  style="width:750px;height:422px"/></p>
         <p>Выбрать другое изображение: </p>
         <input type="file" name="file">
         <p><input type="submit" value="Обновить изображение"/></p>

@@ -1,38 +1,37 @@
 <!DOCTYPE html>
-<!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Все статьи</title>
+    <title>Список пользователей</title>
     <link th:href="@{/css/pageStyle.css}" rel="stylesheet" type="text/css" />
 </head>
 <body>
 <div class="main-block">
     <header th:insert="fragments/header"></header>
     <div th:insert="fragments/userAccountBlock"></div>
-    <form class="element-block" th:action="@{/articles/search}">
-        <p class="link-text-without-decoration"> Поиск статьи:
+    <form class="element-block" th:action="@{/users/search}">
+        <p class="link-text-without-decoration">Поиск пользователей:
             <input type="text" name="search"/>
             <input type="submit" value="Поиск"/>
         </p>
     </form>
-    <div class="element-block" th:if="${mainElementList.size() == 0}">
-        <p class="title-text" >Статей не найдено!</p>
+    <div class="element-block" th:if="${mainElementList.size() > 0}">
+        <p class="title-text">Список пользователей:</p>
+        <div class="inner-block" th:each="user : ${mainElementList}">
+            <p><a class="middle-text" th:href="@{/users/{username}(username=${user.getUsername()})}" th:text="${user.getUsername()}"></a></p>
+            <p>Статей: <a th:text="${user.getArticleList().size()}"></a></p>
+            <p>Комментариев: <a th:text="${user.getCommentsList().size()}"></a></p>
+        </div>
     </div>
-    <div class="element-block" th:each="article : ${mainElementList}">
-        <a class="title-text" th:href="@{/articles/{articleId}(articleId=${article.getArticleId()})}" th:text="${article.getTitle()}">Заголовок стати</a>
-        <p>Дата: <a th:text="${#dates.format(article.getArticleDate(), 'yyyy.MM.dd HH:mm')}"></a></p>
-        <p> <img th:if="${article.getArticleImageName() != null}" th:src="@{/img/{articleFileName}(articleFileName=${article.getArticleImageName()})}"  class="image"/></p>
-        <p class="news-short-text" th:text="${article.getArticleText()}"></p>
-        <a class="link-text-without-decoration" th:href="@{/articles/{articleId}#comments(articleId=${article.getArticleId()})}" th:text="'Комментарии: ' + ${article.getCommentsList().size()}" >Комментарии</a>
-        <p></p>
+    <div class="element-block" th:if="${mainElementList.size() == 0}">
+        <p class="title-text" >Пользователей с таким именем не обнаружено!</p>
     </div>
     <div th:if="${#strings.isEmpty(search)}" class="pagination">
         <div class="pagination-navigation" th:each="availablePage : ${availablePagesList}">
             <a class="pagination-navigation-active-element"
                th:if="${availablePage != pageNumber}"
                th:text="${availablePage}"
-               th:href="@{/articles(page=${availablePage})}">
+               th:href="@{/users(page=${availablePage})}">
             </a>
             <a class="pagination-navigation-inactive-element"
                th:unless="${availablePage != pageNumber}"
@@ -45,7 +44,7 @@
             <a class="pagination-navigation-active-element"
                th:if="${availablePage != pageNumber}"
                th:text="${availablePage}"
-               th:href="@{/articles/search(search=${search},page=${availablePage})}">
+               th:href="@{/users/search(search=${search}, page=${availablePage})}">
             </a>
             <a class="pagination-navigation-inactive-element"
                th:unless="${availablePage != pageNumber}"

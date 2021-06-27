@@ -54,6 +54,11 @@
     text-decoration: none;
 }
 
+.error-text {
+    color: red;
+    font-size: 20px;
+}
+
 .link-text-without-decoration {
     color: black;
     font-weight: bold;
@@ -71,4 +76,33 @@
     width: 60%;
     display: block;
     margin: 0 auto;
+}
+
+.pagination {
+    width: 75%;
+    display: flex;
+    justify-content: center;
+    padding: 10px;
+}
+
+.pagination-navigation {
+    border: 2px solid;
+    line-height: 34px;
+    text-align: center;
+    width: 40px;
+    height: 35px;
+    overflow: hidden;
+    margin-right: 10px;
+}
+
+.pagination-navigation-active-element {
+    text-decoration: none;
+    color: black;
+    text-align: center;
+}
+
+.pagination-navigation-inactive-element {
+    text-decoration: none;
+    color: LightGray;
+    text-align: center;
 }

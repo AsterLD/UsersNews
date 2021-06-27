@@ -20,10 +20,25 @@
     </div>
     <div class="element-block">
         <p>Статьи пользователя: </p>
-        <div class="inner-block" th:each="article : ${user.getArticleList()}">
-            <p><a class="link-text-without-decoration" th:href="@{/articles/{articleId}(articleId=${article.getArticleId()})}" th:text="${article.getTitle()}"></a></p>
-
+        <div class="inner-block" th:if="${mainElementList.size == 0}">
+            <p class="link-text-without-decoration" >Статей нет.</p>
         </div>
+        <div class="inner-block" th:each="article : ${mainElementList}">
+            <p><a class="link-text-without-decoration" th:href="@{/articles/{articleId}(articleId=${article.getArticleId()})}" th:text="${article.getTitle()}"></a></p>
+            <p>Дата: <a th:text="${#dates.format(article.getArticleDate(), 'yyyy.MM.dd HH:mm')}"></a></p>
+        </div>
+        <div class="pagination">
+            <div class="pagination-navigation" th:each="availablePage : ${availablePagesList}">
+                <a class="pagination-navigation-active-element"
+                   th:if="${availablePage != pageNumber}"
+                   th:text="${availablePage}"
+                   th:href="@{/users/{username}(username=${user.getUsername()}, page=${availablePage})}">
+                </a>
+                <a class="pagination-navigation-inactive-element"
+                   th:unless="${availablePage != pageNumber}"
+                   th:text="${availablePage}">
+                </a>
+            </div>
     </div>
 </div>
 </body>

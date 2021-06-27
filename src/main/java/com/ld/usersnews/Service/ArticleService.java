@@ -6,6 +6,8 @@ import com.ld.usersnews.models.User;
 import com.ld.usersnews.repos.ArticleRepo;
 import com.ld.usersnews.repos.UserRepo;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -15,6 +17,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.UUID;
 
+import static com.ld.usersnews.util.PageListGenerator.generateAvailablePageList;
 import static com.ld.usersnews.models.Role.AUTHORIZED_AUTHOR;
 
 @Service
@@ -36,21 +39,28 @@ public class ArticleService  {
         return "article/articlePage";
     }
 
-    public String showArticleListByIsApproved (boolean isApproved, Model model, String page) {
-        model.addAttribute("articleList", articleRepo.findArticlesByIsApprovedOrderByArticleDateDesc(isApproved));
+    public String showArticleListByIsApproved (boolean isApproved, Model model, String page, int pageNumber) {
+        Page<Article> articlePage =
+                articleRepo.findArticlesByIsApprovedOrderByArticleDateDesc(isApproved, PageRequest.of(pageNumber - 1, 5));
+        generateAvailablePageList(model, pageNumber, articlePage);
         return page;
     }
 
-    public String showSearchArticleList (String searchTitle, boolean isApproved, Model model) {
-        model.addAttribute("articleList", articleRepo.findArticlesByTitleContainsAndIsApprovedOrderByArticleDateDesc(searchTitle, isApproved) );
+    public String showArticleListSearchByTitle(String search, boolean isApproved, Model model, int pageNumber) {
+        Page<Article> articlePage = articleRepo.findArticlesByTitleContainsAndIsApprovedOrderByArticleDateDesc(search, isApproved, PageRequest.of(pageNumber - 1, 5))   ;
+        generateAvailablePageList(model, pageNumber, articlePage);
+        model.addAttribute("search", search);
         return "article/articleList";
     }
 
-    public String showUserArticleList (String username, Model model) {
+    public String showUserArticleList (String username, Model model, int pageNumber) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (username.equals(SecurityContextHolder.getContext().getAuthentication().getName()) ||
                 authentication.getAuthorities().stream().anyMatch(r -> r.getAuthority().equals(Role.ADMIN.toString()))) {
-            model.addAttribute("articleList", articleRepo.findArticlesByUser(userRepo.findUserByUsername(username)));
+            Page<Article> articlePage =
+                    articleRepo.findArticlesByUserOrderByArticleDateDesc(userRepo.findUserByUsername(username), PageRequest.of(pageNumber - 1, 5));
+            generateAvailablePageList(model, pageNumber, articlePage);
+            model.addAttribute("username", username);
             return "article/userArticleList";
         }
         return "redirect:/";
@@ -105,7 +115,7 @@ public class ArticleService  {
         if(user.getRoles().contains(AUTHORIZED_AUTHOR)) {
             article.setIsApproved(true);
         }
-        if(file != null) {
+        if(file.getSize() > 0) {
             saveImageFile(file, article);
         }
         article.setUser(user);

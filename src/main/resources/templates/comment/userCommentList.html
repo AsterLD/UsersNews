@@ -9,8 +9,8 @@
 <div class="main-block">
     <header th:insert="fragments/header"></header>
     <div th:insert="fragments/userAccountBlock"></div>
-    <div class="element-block" th:if="${commentsList.size() == 0}"><p>Комментариев нет!</p></div>
-    <div class="element-block" th:each="comment : ${commentsList}">
+    <div class="element-block" th:if="${mainElementList.size() == 0}"><p>Комментариев нет!</p></div>
+    <div class="element-block" th:each="comment : ${mainElementList}">
         <p>Статья: <a th:href="@{/articles/{articleId}#comments(articleId=${comment.getArticle().getArticleId()})}"
                      th:text="${comment.getArticle().getTitle()}"></a></p>
         <p>Дата: <a th:text="${#dates.format(comment.getCommentDate(), 'yyyy.MM.dd HH:mm:ss')}"></a></p>
@@ -22,6 +22,18 @@
             <p><input type="submit" value="Удалить комментарий"/></p>
         </form>
     </div>
+    <div class="pagination">
+        <div class="pagination-navigation" th:each="availablePage : ${availablePagesList}">
+            <a class="pagination-navigation-active-element"
+               th:if="${availablePage != pageNumber}"
+               th:text="${availablePage}"
+               th:href="@{/users/{username}/comments(username=${username}, page=${availablePage})}">
+            </a>
+            <a class="pagination-navigation-inactive-element"
+               th:unless="${availablePage != pageNumber}"
+               th:text="${availablePage}">
+            </a>
+        </div>
 </div>
 </body>
 </html>

@@ -2,7 +2,10 @@ package com.ld.usersnews.Service;
 
 import com.ld.usersnews.models.Role;
 import com.ld.usersnews.models.User;
+import com.ld.usersnews.repos.ArticleRepo;
 import com.ld.usersnews.repos.UserRepo;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -12,15 +15,19 @@ import org.springframework.ui.Model;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static com.ld.usersnews.util.PageListGenerator.generateAvailablePageList;
+
 @Service
 public class UserService implements UserDetailsService {
 
     private final PasswordEncoder passwordEncoder;
     private final UserRepo userRepo;
+    private final ArticleRepo articleRepo;
 
-    public UserService(PasswordEncoder passwordEncoder, UserRepo userRepo) {
+    public UserService(PasswordEncoder passwordEncoder, UserRepo userRepo, ArticleRepo articleRepo) {
         this.passwordEncoder = passwordEncoder;
         this.userRepo = userRepo;
+        this.articleRepo = articleRepo;
     }
 
     @Override
@@ -49,9 +56,10 @@ public class UserService implements UserDetailsService {
         return "redirect:/login";
     }
 
-    public String findAll(Model model) {
-        model.addAttribute("users", userRepo.findAll());
-        return "user/usersList";
+    public String findAll(Model model, int pageNumber) {
+        Page<User> usersPage = userRepo.findAll(PageRequest.of(pageNumber - 1, 5));
+        generateAvailablePageList(model, pageNumber, usersPage);
+        return "user/userList";
     }
 
     public String findUser(String username, Model model, String page) {
@@ -59,9 +67,53 @@ public class UserService implements UserDetailsService {
         return page;
     }
 
-    public String searchUsers(String username, Model model) {
-        model.addAttribute("users", userRepo.findUserByUsernameContains(username));
-        return "user/usersList";
+    public String findUserInfo(String username, Model model, String page, int pageNumber) {
+        User user = userRepo.findUserByUsername(username);
+        generateAvailablePageList(model, pageNumber, articleRepo.findArticlesByUser(user, PageRequest.of(pageNumber - 1, 5)));
+        model.addAttribute("user", user);
+        return page;
+    }
+
+    public String searchUsers(String search, Model model, int pageNumber) {
+        Page<User> usersPage = userRepo.findUserByUsernameContains(search, PageRequest.of(pageNumber - 1, 5));
+        generateAvailablePageList(model, pageNumber, usersPage);
+        model.addAttribute("search", search);
+        return "user/userList";
+    }
+
+    public String changeUsername(String username, String password, User user, Model model) {
+        User userFromDb = userRepo.findUserByUsername(username);
+        User renamedUser = userRepo.findUserByUserId(user.getUserId());
+        if (userFromDb != null && !renamedUser.getUserId().equals(userFromDb.getUserId())) {
+            model.addAttribute("message", "Пользователь с таким именем уже существует!");
+            model.addAttribute("user", user);
+            return "settings/changeUsername";
+        }
+        if (!passwordEncoder.matches(password, renamedUser.getPassword())) {
+            model.addAttribute("message", "Неверный пароль!");
+            model.addAttribute("user", user);
+            return "settings/changeUsername";
+        }
+        renamedUser.setUsername(username);
+        userRepo.save(renamedUser);
+        return "redirect:/logout";
+    }
+
+    public String changeSecurityQuestionAndAnswer(String username,
+                                                  String newSecurityQuestion,
+                                                  String newSecurityAnswer,
+                                                  String password, Model model) {
+        User user = userRepo.findUserByUsername(username);
+        if (passwordEncoder.matches(password, user.getPassword())) {
+            user.setSecurityQuestion(newSecurityQuestion);
+            user.setSecurityAnswer(passwordEncoder.encode(newSecurityAnswer));
+            userRepo.save(user);
+            return "redirect:/logout";
+        }
+        else {
+            model.addAttribute("message", "Неверный пароль!");
+            return "settings/changeSecurityQuestion";
+        }
     }
 
     public String editUser(String username, Map<String, String> form, User user, Model model) {
@@ -69,7 +121,7 @@ public class UserService implements UserDetailsService {
         if (userFromDb != null && !user.getUserId().equals(userFromDb.getUserId())) {
             model.addAttribute("message", "Пользователь с таким именем уже существует!");
             model.addAttribute("user", user);
-            return "user/editUser";
+            return "user/editUserPage";
         }
         user.setEnabled(form.containsKey("isEnabled"));
         user.setUsername(username);

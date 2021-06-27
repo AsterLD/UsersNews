@@ -2,9 +2,10 @@ package com.ld.usersnews.repos;
 
 import com.ld.usersnews.models.Comment;
 import com.ld.usersnews.models.User;
-import org.springframework.data.repository.CrudRepository;
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.repository.PagingAndSortingRepository;
 
-public interface CommentRepo extends CrudRepository<Comment, Long> {
-    List<Comment> findCommentsByUser(User user);
+public interface CommentRepo extends PagingAndSortingRepository<Comment, Long> {
+    Page<Comment> findCommentsByUser(User user, Pageable pageable);
 }
