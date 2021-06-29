@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Настройки</title>
+    <link th:href="@{/css/pageStyle.css}" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div class="main-block">
+    <header th:insert="fragments/header"></header>
+    <div th:insert="fragments/userAccountBlock"></div>
+    <div class="element-block">
+        <p><a class="link-text-without-decoration" th:href="@{/users/{username}/settings/change_name(username=${#authentication.getName()})}"> Изменить имя учетной записи</a></p>
+        <p><a class="link-text-without-decoration" th:href="@{/users/{username}/settings/password(username=${#authentication.getName()})}">Изменить пароль учетной записи</a></p>
+        <p><a class="link-text-without-decoration" th:href="@{/users/{username}/settings/security_question(username=${#authentication.getName()})}"> Изменить секретный вопрос</a></p>
+    </div>
+</div>
+</body>
+</html>

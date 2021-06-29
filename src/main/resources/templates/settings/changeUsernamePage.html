@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Сменить имя пользователя</title>
+    <link th:href="@{/css/pageStyle.css}" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div class="main-block">
+    <header th:insert="fragments/header"></header>
+    <form class="authorization-block" th:action="@{/users/{username}/settings/change_name(username=${#authentication.getName()})}" th:method="POST">
+        <p><input type="hidden" th:name="userId" th:value="${user.getUserId()}" /></p>
+        <p class="error-text" th:if="${message}" th:text="${message}"></p>
+        <p>Новый логин учетной записи:</p>
+        <p><input type="text" name="newUsername" required/></p>
+        <p>Пароль:</p>
+        <p><input type="password" name="password"/></p>
+        <p><input type="submit" value="Изменить данные"/> </p>
+    </form>
+</div>
+</body>
+</html>
