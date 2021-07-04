@@ -27,18 +27,24 @@
             <p><a class="link-text-without-decoration" th:href="@{/articles/{articleId}(articleId=${article.getArticleId()})}" th:text="${article.getTitle()}"></a></p>
             <p>Дата: <a th:text="${#dates.format(article.getArticleDate(), 'yyyy.MM.dd HH:mm')}"></a></p>
         </div>
-        <div class="pagination">
-            <div class="pagination-navigation" th:each="availablePage : ${availablePagesList}">
-                <a class="pagination-navigation-active-element"
-                   th:if="${availablePage != pageNumber}"
-                   th:text="${availablePage}"
-                   th:href="@{/users/{username}(username=${user.getUsername()}, page=${availablePage})}">
-                </a>
-                <a class="pagination-navigation-inactive-element"
-                   th:unless="${availablePage != pageNumber}"
-                   th:text="${availablePage}">
-                </a>
+        <div th:if="${availablePagesList != null}">
+            <div th:if="${availablePagesList.size() >= 5}" class="pagination">
+                <div class="pagination-navigation" th:if="${pageNumber < 4 }" th:each="page : ${#numbers.sequence(1, 5)}">
+                    <a th:attr="class=${page == pageNumber ? 'pagination-navigation-inactive-element' : 'pagination-navigation-active-element'}" th:href="@{/users/{username}(username=${user.getUsername()}, page=${page})}" th:text="${page}"></a>
+                </div>
+                <div class="pagination-navigation" th:if="${pageNumber >= 4 && pageNumber <= availablePagesList.size() - 2}" th:each="page : ${#numbers.sequence(pageNumber - 2, pageNumber + 2)}">
+                    <a th:attr="class=${page == pageNumber ? 'pagination-navigation-inactive-element' : 'pagination-navigation-active-element'}" th:href="@{/users/{username}(username=${user.getUsername()}, page=${page})}" th:text="${page}"></a>
+                </div>
+                <div class="pagination-navigation" th:if="${pageNumber > availablePagesList.size() - 2}" th:each="page : ${#numbers.sequence(availablePagesList.size() - 4, availablePagesList.size())}">
+                    <a th:attr="class=${page == pageNumber ? 'pagination-navigation-inactive-element' : 'pagination-navigation-active-element'}" th:href="@{/users/{username}(username=${user.getUsername()}, page=${page})}" th:text="${page}"></a>
+                </div>
             </div>
+            <div th:if="${availablePagesList.size() < 5}" class="pagination">
+                <div class="pagination-navigation" th:each="page : ${#numbers.sequence(1, availablePagesList.size())}">
+                    <a th:attr="class=${page == pageNumber ? 'pagination-navigation-inactive-element' : 'pagination-navigation-active-element'}" th:href="@{/users/{username}(username=${user.getUsername()}, page=${page})}" th:text="${page}"></a>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 </body>

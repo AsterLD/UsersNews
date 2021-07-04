@@ -19,6 +19,6 @@ public class MainPageController {
 
     @GetMapping
     public String showMainPage(@RequestParam(defaultValue = "1") int page, Model model) {
-        return articleService.showArticleListByIsApproved (true, model, "homePage", page);
+        return articleService.showArticleListByIsApproved ( model, "homePage", page, true);
     }
 }
