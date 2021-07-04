@@ -28,7 +28,7 @@ public class CommentService {
         this.articleRepo = articleRepo;
     }
 
-    public String showCommentListByUsername(String username, Model model, int pageNumber) {
+    public String showCommentListByUsername(Model model, String username, int pageNumber) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (username.equals(SecurityContextHolder.getContext().getAuthentication().getName()) ||
                 authentication.getAuthorities().stream().anyMatch(r -> r.getAuthority().equals(Role.ADMIN.toString()))) {
@@ -36,12 +36,12 @@ public class CommentService {
             Page<Comment> contentPage = commentRepo.findCommentsByUser(user, PageRequest.of(pageNumber - 1, 5));
             generateAvailablePageList(model, pageNumber, contentPage);
             model.addAttribute("username", username);
-            return "comment/userCommentsList";
+            return "comment/userCommentListPage";
         }
         return "redirect:/";
     }
 
-    public String saveComment(Comment comment, Long articleId) {
+    public String saveComment(Long articleId, Comment comment) {
         comment.setArticle(articleRepo.findArticleByArticleId(articleId));
         comment.setUser(userRepo.findUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName()));
         commentRepo.save(comment);

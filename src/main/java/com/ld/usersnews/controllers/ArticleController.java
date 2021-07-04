@@ -20,30 +20,30 @@ public class ArticleController {
 
     @GetMapping
     public String showArticleListPage(@RequestParam(defaultValue = "1") int page, Model model) {
-        return articleService.showArticleListByIsApproved(true, model, "article/articleList", page);
+        return articleService.showArticleListByIsApproved( model, "article/articleListPage", page, true);
     }
 
     @GetMapping("/search")
     public String searchResultArticlesList(@RequestParam (defaultValue = "") String search,
                                            @RequestParam(defaultValue = "1") int page, Model model) {
-        return articleService.showArticleListSearchByTitle(search, true, model, page);
+        return articleService.showArticleListSearchByTitle(model, search, page, true);
     }
 
     @GetMapping("/user/{username}/")
     public String showUserArticleListPage(@RequestParam(defaultValue = "1") int page,
                                           @PathVariable String username, Model model) {
-        return articleService.showUserArticleList(username, model, page);
+        return articleService.showUserArticleList(model, username, page);
     }
 
     @PreAuthorize("hasAnyAuthority('ADMIN','EDITOR')")
     @GetMapping("/unapproved")
     public String showUnapprovedArticleList(@RequestParam(defaultValue = "1") int page, Model model) {
-        return articleService.showArticleListByIsApproved(false, model, "article/unapprovedArticleList", page);
+        return articleService.showArticleListByIsApproved( model, "article/unapprovedArticleListPage", page, false);
     }
 
     @GetMapping("/{articleId}")
     public String showArticlePage(@PathVariable Long articleId, Model model) {
-        return articleService.showArticleById(articleId, model);
+        return articleService.showArticleById(model, articleId);
     }
 
     @GetMapping("/new")
@@ -58,7 +58,7 @@ public class ArticleController {
 
     @GetMapping("/{articleId}/edit")
     public String showEditArticlePage(@PathVariable Long articleId, Model model) {
-        return articleService.showArticleToEdit(articleId, model);
+        return articleService.showArticleToEdit(model, articleId);
     }
 
     @PatchMapping("/{articleId}")

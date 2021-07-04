@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Мои статьи</title>
+    <link th:href="@{/css/pageStyle.css}" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div class="main-block">
+    <header th:insert="fragments/header"></header>
+    <div th:insert="fragments/userAccountBlock"></div>
+    <div class="element-block" th:if="${mainElementList.size() == 0}"><p>Статей нет!</p></div>
+    <div class="element-block" th:each="article : ${mainElementList}">
+        <a class="title-text" th:href="@{/articles/{articleId}(articleId=${article.getArticleId()})}" th:text="${article.getTitle()}">Заголовок стати</a>
+        <p>Дата: <a th:text="${#dates.format(article.getArticleDate(), 'yyyy.MM.dd HH:mm')}"></a></p>
+        <p> <img th:if="${article.getArticleImageName() != null}" th:src="@{/img/{articleFileName}(articleFileName=${article.getArticleImageName()})}"  class="image"/></p>
+        <p class="news-short-text" th:text="${article.getArticleText()}"></p>
+        <p><a class="link-text-without-decoration" th:href="@{/articles/{articleId}/edit(articleId=${article.getArticleId()})}">Редактировать</a></p>
+        <a class="link-text-without-decoration" th:href="@{/articles/{articleId}#comments(articleId=${article.getArticleId()})}" th:text="'Комментарии: ' + ${article.getCommentsList().size()}" >Комментарии</a>
+        <p></p>
+    </div>
+    <div th:if="${availablePagesList != null}">
+        <div th:if="${availablePagesList.size() >= 5}" class="pagination">
+            <div class="pagination-navigation" th:if="${pageNumber < 4 }" th:each="page : ${#numbers.sequence(1, 5)}">
+                <a th:attr="class=${page == pageNumber ? 'pagination-navigation-inactive-element' : 'pagination-navigation-active-element'}" th:href="@{/articles/user/{username}(username=${username}, page=${page})}" th:text="${page}"></a>
+            </div>
+            <div class="pagination-navigation" th:if="${pageNumber >= 4 && pageNumber <= availablePagesList.size() - 2}" th:each="page : ${#numbers.sequence(pageNumber - 2, pageNumber + 2)}">
+                <a th:attr="class=${page == pageNumber ? 'pagination-navigation-inactive-element' : 'pagination-navigation-active-element'}" th:href="@{/articles/user/{username}(username=${username}, page=${page})}" th:text="${page}"></a>
+            </div>
+            <div class="pagination-navigation" th:if="${pageNumber > availablePagesList.size() - 2}" th:each="page : ${#numbers.sequence(availablePagesList.size() - 4, availablePagesList.size())}">
+                <a th:attr="class=${page == pageNumber ? 'pagination-navigation-inactive-element' : 'pagination-navigation-active-element'}" th:href="@{/articles/user/{username}(username=${username}, page=${page})}" th:text="${page}"></a>
+            </div>
+        </div>
+        <div th:if="${availablePagesList.size() < 5}" class="pagination">
+            <div class="pagination-navigation" th:each="page : ${#numbers.sequence(1, availablePagesList.size())}">
+                <a th:attr="class=${page == pageNumber ? 'pagination-navigation-inactive-element' : 'pagination-navigation-active-element'}" th:href="@{/articles/user/{username}(username=${username}, page=${page})}" th:text="${page}"></a>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -34,26 +34,26 @@ public class ArticleService  {
         this.userRepo = userRepo;
     }
 
-    public String showArticleById(Long articleId, Model model) {
+    public String showArticleById(Model model, Long articleId) {
         model.addAttribute("article", articleRepo.findArticleByArticleId(articleId));
         return "article/articlePage";
     }
 
-    public String showArticleListByIsApproved (boolean isApproved, Model model, String page, int pageNumber) {
+    public String showArticleListByIsApproved (Model model, String page, int pageNumber, boolean isApproved) {
         Page<Article> articlePage =
                 articleRepo.findArticlesByIsApprovedOrderByArticleDateDesc(isApproved, PageRequest.of(pageNumber - 1, 5));
         generateAvailablePageList(model, pageNumber, articlePage);
         return page;
     }
 
-    public String showArticleListSearchByTitle(String search, boolean isApproved, Model model, int pageNumber) {
+    public String showArticleListSearchByTitle(Model model, String search, int pageNumber, boolean isApproved) {
         Page<Article> articlePage = articleRepo.findArticlesByTitleContainsAndIsApprovedOrderByArticleDateDesc(search, isApproved, PageRequest.of(pageNumber - 1, 5))   ;
         generateAvailablePageList(model, pageNumber, articlePage);
         model.addAttribute("search", search);
-        return "article/articleList";
+        return "article/articleListPage";
     }
 
-    public String showUserArticleList (String username, Model model, int pageNumber) {
+    public String showUserArticleList (Model model, String username, int pageNumber) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (username.equals(SecurityContextHolder.getContext().getAuthentication().getName()) ||
                 authentication.getAuthorities().stream().anyMatch(r -> r.getAuthority().equals(Role.ADMIN.toString()))) {
@@ -61,18 +61,18 @@ public class ArticleService  {
                     articleRepo.findArticlesByUserOrderByArticleDateDesc(userRepo.findUserByUsername(username), PageRequest.of(pageNumber - 1, 5));
             generateAvailablePageList(model, pageNumber, articlePage);
             model.addAttribute("username", username);
-            return "article/userArticleList";
+            return "article/userArticleListPage";
         }
         return "redirect:/";
     }
 
-    public String showArticleToEdit (Long articleId, Model model) {
+    public String showArticleToEdit (Model model, Long articleId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Article article = articleRepo.findArticleByArticleId(articleId);
         if (article.getUser().getUsername().equals(SecurityContextHolder.getContext().getAuthentication().getName())
                 || authentication.getAuthorities().stream().anyMatch(r -> r.getAuthority().equals(Role.EDITOR.toString()))) {
             model.addAttribute("article", article);
-            return "article/editArticle";
+            return "article/editArticlePage";
         }
         return "redirect:/";
     }

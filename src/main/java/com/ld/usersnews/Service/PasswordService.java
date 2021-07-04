@@ -18,13 +18,13 @@ public class PasswordService {
 
     public String showChangeUserPasswordPage(Model model, String username) {
         model.addAttribute("user", userRepo.findUserByUsername(username));
-        return "settings/changePassword";
+        return "settings/changePasswordPage";
     }
 
-    public String changeUserPassword(String username,
+    public String changeUserPassword(Model model,
+                                     String username,
                                      String oldPassword,
-                                     String newPassword,
-                                     Model model) {
+                                     String newPassword) {
         User user = userRepo.findUserByUsername(username);
         if (passwordEncoder.matches(oldPassword, user.getPassword())) {
             user.setPassword(passwordEncoder.encode(newPassword));
@@ -34,18 +34,18 @@ public class PasswordService {
         else {
             model.addAttribute("message", "Неверный пароль!");
             model.addAttribute("user", userRepo.findUserByUsername(username));
-            return "settings/changePassword";
+            return "settings/changePasswordPage";
         }
     }
 
     public String recoveryUserPassword(Model model, String username, String action) {
         if (userRepo.findUserByUsername(username) != null) {
             if (action.equals("reset")) {
-                return "password/reset";
+                return "password/resetViaEmailPage";
             }
             if (action.equals("securityQuestion")) {
                 model.addAttribute("user", userRepo.findUserByUsername(username));
-                return "password/securityQuestion";
+                return "password/securityQuestionPage";
             }
         }
         return "password/choiceRecoveryMethod";
@@ -59,6 +59,6 @@ public class PasswordService {
             userRepo.save(user);
             return "redirect:/login";
         }
-        return "password/securityQuestion";
+        return "password/securityQuestionPage";
     }
 }

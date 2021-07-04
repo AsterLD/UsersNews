@@ -24,7 +24,7 @@ public class RegistrationController {
     }
 
     @PostMapping
-    public String addUser(User user, Model model) {
-        return userService.addUser(user, model);
+    public String addUser(Model model, User user) {
+        return userService.addUser(model, user);
     }
 }

@@ -26,13 +26,13 @@ public class SettingsController {
 
     @GetMapping("/change_name")
     public String showChangeUsernamePage (@PathVariable String username, Model model) {
-        return userService.findUser(username, model, "settings/changeUsernamePage");
+        return userService.findUser( model, username, "settings/changeUsernamePage");
     }
 
     @PostMapping("/change_name")
-    public String changeUsername (String newUsername, String password,
-                                  User user, Model model) {
-        return userService.changeUsername(newUsername, password, user, model);
+    public String changeUsername (Model model, String newUsername, String password,
+                                  User user) {
+        return userService.changeUsername(model, newUsername, password, user);
     }
 
     @GetMapping("/password")
@@ -45,7 +45,7 @@ public class SettingsController {
                                                 @RequestParam String oldPassword,
                                                 @RequestParam String newPassword,
                                                 Model model) {
-        return passwordService.changeUserPassword(username, oldPassword, newPassword, model);
+        return passwordService.changeUserPassword(model, username, oldPassword, newPassword);
     }
 
     @GetMapping("/security_question")
@@ -58,7 +58,7 @@ public class SettingsController {
                                                            @RequestParam String newSecurityQuestion,
                                                            @RequestParam String newSecurityAnswer,
                                                            @RequestParam String password, Model model) {
-        return userService.changeSecurityQuestionAndAnswer(username, newSecurityQuestion, newSecurityAnswer, password, model);
+        return userService.changeSecurityQuestionAndAnswer(model, username, newSecurityQuestion, newSecurityAnswer, password);
     }
 
 }

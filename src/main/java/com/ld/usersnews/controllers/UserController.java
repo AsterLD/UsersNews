@@ -26,19 +26,19 @@ public class UserController {
     @GetMapping("/search")
     public String findUsers(@RequestParam(name = "search", defaultValue = "") String search,
                             @RequestParam(defaultValue = "1") int page, Model model) {
-        return userService.searchUsers(search, model, page);
+        return userService.searchUsers(model, search, page);
     }
 
     @GetMapping("/{username}")
     public String showUserInfoPage(@RequestParam(defaultValue = "1") int page,
                                    @PathVariable String username, Model model) {
-        return userService.findUserInfo(username, model, "user/userInfoPage", page);
+        return userService.findUserInfo(model, username, "user/userInfoPage", page);
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/{username}/edit")
     public String showEditUserPage(@PathVariable String username, Model model) {
-        return userService.findUser(username, model, "user/editUserPage");
+        return userService.findUser(model, username, "user/editUserPage");
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")
@@ -47,7 +47,7 @@ public class UserController {
                              @RequestParam Map<String, String> form,
                              @RequestParam("userId") User user,
                              Model model) {
-        return userService.editUser(username, form, user, model);
+        return userService.editUser(model, username, form, user);
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")

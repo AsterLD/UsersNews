@@ -39,11 +39,11 @@ public class UserService implements UserDetailsService {
         return user;
     }
 
-    public String addUser(User user, Model model) {
+    public String addUser(Model model, User user) {
         User userFromDb = userRepo.findUserByUsername(user.getUsername());
         if (userFromDb != null) {
             model.addAttribute("message", "Пользователь уже существует!");
-            return "registration/newUser";
+            return "registration/registrationPage";
         }
         user.setEnabled(true);
         user.setAccountNonExpired(true);
@@ -59,50 +59,51 @@ public class UserService implements UserDetailsService {
     public String findAll(Model model, int pageNumber) {
         Page<User> usersPage = userRepo.findAll(PageRequest.of(pageNumber - 1, 5));
         generateAvailablePageList(model, pageNumber, usersPage);
-        return "user/userList";
+        return "user/userListPage";
     }
 
-    public String findUser(String username, Model model, String page) {
+    public String findUser(Model model, String username, String page) {
         model.addAttribute("user", userRepo.findUserByUsername(username));
         return page;
     }
 
-    public String findUserInfo(String username, Model model, String page, int pageNumber) {
+    public String findUserInfo(Model model, String username, String page, int pageNumber) {
         User user = userRepo.findUserByUsername(username);
         generateAvailablePageList(model, pageNumber, articleRepo.findArticlesByUser(user, PageRequest.of(pageNumber - 1, 5)));
         model.addAttribute("user", user);
         return page;
     }
 
-    public String searchUsers(String search, Model model, int pageNumber) {
+    public String searchUsers(Model model, String search, int pageNumber) {
         Page<User> usersPage = userRepo.findUserByUsernameContains(search, PageRequest.of(pageNumber - 1, 5));
         generateAvailablePageList(model, pageNumber, usersPage);
         model.addAttribute("search", search);
-        return "user/userList";
+        return "user/userListPage";
     }
 
-    public String changeUsername(String username, String password, User user, Model model) {
+    public String changeUsername(Model model, String username, String password, User user) {
         User userFromDb = userRepo.findUserByUsername(username);
         User renamedUser = userRepo.findUserByUserId(user.getUserId());
         if (userFromDb != null && !renamedUser.getUserId().equals(userFromDb.getUserId())) {
             model.addAttribute("message", "Пользователь с таким именем уже существует!");
             model.addAttribute("user", user);
-            return "settings/changeUsername";
+            return "settings/changeUsernamePage";
         }
         if (!passwordEncoder.matches(password, renamedUser.getPassword())) {
             model.addAttribute("message", "Неверный пароль!");
             model.addAttribute("user", user);
-            return "settings/changeUsername";
+            return "settings/changeUsernamePage";
         }
         renamedUser.setUsername(username);
         userRepo.save(renamedUser);
         return "redirect:/logout";
     }
 
-    public String changeSecurityQuestionAndAnswer(String username,
+    public String changeSecurityQuestionAndAnswer(Model model,
+                                                  String username,
                                                   String newSecurityQuestion,
                                                   String newSecurityAnswer,
-                                                  String password, Model model) {
+                                                  String password) {
         User user = userRepo.findUserByUsername(username);
         if (passwordEncoder.matches(password, user.getPassword())) {
             user.setSecurityQuestion(newSecurityQuestion);
@@ -112,11 +113,11 @@ public class UserService implements UserDetailsService {
         }
         else {
             model.addAttribute("message", "Неверный пароль!");
-            return "settings/changeSecurityQuestion";
+            return "settings/changeSecurityQuestionPage";
         }
     }
 
-    public String editUser(String username, Map<String, String> form, User user, Model model) {
+    public String editUser(Model model, String username, Map<String, String> form, User user ) {
         User userFromDb = userRepo.findUserByUsername(username);
         if (userFromDb != null && !user.getUserId().equals(userFromDb.getUserId())) {
             model.addAttribute("message", "Пользователь с таким именем уже существует!");

@@ -21,15 +21,15 @@ public class PasswordController {
     }
 
     @PostMapping("/reset_password")
-    public String showRestoreMethodPage(Model model, @RequestParam String username, @RequestParam String action) {
+    public String showRestoreMethodPage(@RequestParam String username,
+                                        @RequestParam String action, Model model) {
         return passwordService.recoveryUserPassword(model, username, action);
     }
 
     @PostMapping("/new")
-    public String changePassword (Model model,
-                                      @RequestParam String username,
-                                      @RequestParam String answer,
-                                      @RequestParam String password) {
+    public String changePassword (@RequestParam String username,
+                                  @RequestParam String answer,
+                                  @RequestParam String password, Model model) {
         return passwordService.setNewPasswordViaSecurityQuestion(model, username, answer, password);
     }
 }

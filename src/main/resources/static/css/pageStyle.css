@@ -105,4 +105,5 @@
     text-decoration: none;
     color: LightGray;
     text-align: center;
+    pointer-events: none;
 }

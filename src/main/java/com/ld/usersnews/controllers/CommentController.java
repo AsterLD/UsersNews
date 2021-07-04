@@ -18,12 +18,12 @@ public class CommentController {
 
     @GetMapping("/users/{username}/comments")
     public String showUserCommentListPage(@RequestParam(defaultValue = "1") int page, @PathVariable String username, Model model) {
-        return commentService.showCommentListByUsername(username, model, page);
+        return commentService.showCommentListByUsername( model, username, page);
     }
 
     @PostMapping("/articles/{articleId}/comments")
     public String saveComment(@PathVariable Long articleId, Comment comment) {
-        return commentService.saveComment(comment, articleId);
+        return commentService.saveComment(articleId, comment);
     }
 
     @PreAuthorize("hasAnyAuthority('ADMIN','EDITOR')")
