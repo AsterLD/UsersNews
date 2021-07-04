@@ -12,8 +12,8 @@
     <div class="element-block">
         <p> Пользователь: <a th:text="${user.getUsername()}"></a></p>
         <p> Комментариев: <a th:text="${user.getCommentsList().size()}"></a></p>
-        <p><a sec:authorize ="hasAuthority('ADMIN')" th:href="@{/users/{username}/comments(username=${user.getUsername()})}">Все комментарии пользователя</a></p>
-        <p><a sec:authorize ="hasAuthority('ADMIN')" th:href="@{/users/{username}/edit(username=${user.getUsername()})}"> Редактировать</a></p>
+        <p><a class="link-text-without-decoration" sec:authorize ="hasAuthority('ADMIN')" th:href="@{/users/{username}/comments(username=${user.getUsername()})}">Все комментарии пользователя</a></p>
+        <p><a class="link-text-without-decoration" sec:authorize ="hasAuthority('ADMIN')" th:href="@{/users/{username}/edit(username=${user.getUsername()})}"> Редактировать</a></p>
         <form sec:authorize ="hasAuthority('ADMIN')" th:method="DELETE" th:action="@{/users/{username}(username=${user.getUsername()})}">
             <input type="submit" value="Удалить пользователя"/>
         </form>
