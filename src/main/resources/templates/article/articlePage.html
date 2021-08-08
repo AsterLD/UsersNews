@@ -16,6 +16,12 @@
         <img th:if="${article.getArticleImageName() != null}" th:src="@{/img/{articleFileName}(articleFileName=${article.getArticleImageName()})}"  class="image" />
         <p><a th:text="${article.getArticleText()}"></a></p>
     </div>
+    <div th:class="element-block" sec:authorize ="hasAnyAuthority( 'EDITOR', 'ADMIN')">
+        <form th:method="DELETE"
+              th:action="@{/articles/{articleId}/(articleId=${article.getArticleId()})}">
+            <p><input type="submit" value="Удалить статью"/></p>
+        </form>
+    </div>
     <div th:class="element-block">
         <form sec:authorize ="!isAnonymous()" th:method="POST" th:action="@{/articles/{articleId}/comments/(articleId=${article.getArticleId()})}">
             <p>Добавить комментарий:</p>

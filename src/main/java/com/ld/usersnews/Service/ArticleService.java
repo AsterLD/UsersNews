@@ -107,7 +107,7 @@ public class ArticleService  {
 
     public String deleteArticleById (Long articleId) {
         articleRepo.deleteById(articleId);
-        return "redirect:/articles/unapproved";
+        return "redirect:/";
     }
 
     public String addArticle (MultipartFile file, Article article, String page) {

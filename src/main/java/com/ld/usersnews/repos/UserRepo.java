@@ -1,6 +1,5 @@
 package com.ld.usersnews.repos;
 
-import com.ld.usersnews.models.Article;
 import com.ld.usersnews.models.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
