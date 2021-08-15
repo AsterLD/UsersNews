@@ -15,6 +15,13 @@ import org.springframework.ui.Model;
 
 import static com.ld.usersnews.util.PageListGenerator.generateAvailablePageList;
 
+/*
+ * Класс CommentService, хранит в себе логику, для работы CommentController.
+ * showCommentListByUsername - Отображает список комментариев, написанных конкретным пользователем,
+ * saveComment - указывает кто автор комментария, к какой статье он относится, и после, сохраняет комментарий в БД,
+ * deleteCommentById - Удаляет комментарий из БД.
+ */
+
 @Service
 public class CommentService {
 

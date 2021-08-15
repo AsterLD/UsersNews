@@ -6,6 +6,11 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+/*
+ * Класс конфигурации, в котором настроены простые контроллеры для главной страницы, и страницы авторизации,
+ * а также указаны пути расположения для файлов.
+ */
+
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 

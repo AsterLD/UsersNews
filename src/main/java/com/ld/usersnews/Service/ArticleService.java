@@ -20,6 +20,27 @@ import java.util.UUID;
 import static com.ld.usersnews.util.PageListGenerator.generateAvailablePageList;
 import static com.ld.usersnews.models.Role.AUTHORIZED_AUTHOR;
 
+/*
+ * Класс ArticleService, хранит в себе логику, для работы ArticleController.
+ * showArticleById - Используется для поиска конкретной статьи с помощью ID,
+ * showArticleListByIsApproved - Отображает проверенных статей (isApproved = true),
+ * showArticleListSearchByTitle - Отображает список статьей, в названии которых присутствует запрашиваемая часть,
+ * showUserArticleList - Отображает список статей, загруженных кокретным пользователем
+ * (обычный пользователь, может видеть только свой список статей, пользователь с правами ADMIN, имеет доступ ко всем,
+ * showArticleToEdit - Отображает всю информацию из статьи, для редактирования,
+ * editArticle - Сохраняет внесенные изменения в статью,
+ * editArticleImage - Используется для измениня изображения в статье,
+ * approveArticle - Указывает, что конкретная статья проверена (поле isApproved меняется на true),
+ * deleteArticleById - Удаляет конкретную статью,
+ * addArticle - Сохраняет информацию из статьи (Заголовок, текст), а также, если у статьи имеется изображение,
+ * вызывает saveImageFile, если пользователь имеет права AUTHORIZED_AUTHOR,
+ * то статья автоматически устанавливается, как проверенная,
+ * saveImageFile:
+ * 1. проверяет, существует, ли папка для сохранения изображений, в случае отсутствия, создает её,
+ * 2. используя UUID и старое имя файла, генерирует новое, чтобы исключить возможность совпадения имен,
+ * 3. сохраняет файл в папке, используя новое имя, добавляет в объект класса информацию об имени файла.
+ */
+
 @Service
 public class ArticleService  {
 

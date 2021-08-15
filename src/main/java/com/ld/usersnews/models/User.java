@@ -1,11 +1,15 @@
 package com.ld.usersnews.models;
 
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import javax.persistence.*;
-import java.util.Collection;
 import java.util.List;
 import java.util.Set;
+
+/*
+ * Класс User, используется для хранения информации о пользователе, включает в себя генерацию таблицы user_roles
+ * для хранения ролей пользователя, имеет свзяь один-ко-многим
+ * с классами ( и соответствующими данным классам таблицами articles и comments) Article и Comment.
+ */
 
 @Entity
 @Table(name = "users")
@@ -135,8 +139,8 @@ public class User implements UserDetails {
     }
 
     @Override
-    public Collection<Role> getAuthorities() {
-        return getRoles();
+    public Set<Role> getAuthorities() {
+        return roles;
     }
 
     public boolean isCredentialsNonExpire() {

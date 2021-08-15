@@ -5,6 +5,12 @@ import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
 
+/*
+ * Класс Article, используется для хранения информации об одной статье, добавленной пользователем,
+ * имеет свзяь один-ко-многим с классом Comment (таблица comments),
+ * а также имеется связь многие-к-одному с классом User (таблица users).
+ */
+
 @Entity
 @Table(name = "articles")
 public class Article {

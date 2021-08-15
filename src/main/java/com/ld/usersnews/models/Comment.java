@@ -4,6 +4,12 @@ import org.hibernate.annotations.CreationTimestamp;
 import javax.persistence.*;
 import java.util.Date;
 
+/*
+ * Класс Article, используется для хранения информации об одной комментарии, оставленном пользователем к статье,
+ * имеет связь многие-к-одному с классом User (таблица users),
+ * а также, имеет связь многие-к-одному с классом Article (таблица articles).
+ */
+
 @Entity
 @Table(name = "comments")
 public class Comment {

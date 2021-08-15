@@ -5,6 +5,14 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
+/*
+ * Класс PasswordService, хранит в себе логику, для работы PasswordController.
+ * showChangeUserPasswordPage - Отображает страницу изменения пароля,
+ * changeUserPassword - Если старый пароль был введен верно, изменяет пароль учетной записи в БД,
+ * recoveryUserPassword - Отображает страницу восстановления пароля, в зависимости от выбранного способа,
+ * setNewPasswordViaSecurityQuestion - Если ответ на секретный вопрос был введен верно, изменяет пароль учетной записи.
+ */
+
 @Service
 public class PasswordService {
 

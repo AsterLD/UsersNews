@@ -14,8 +14,22 @@ import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import java.util.*;
 import java.util.stream.Collectors;
-
 import static com.ld.usersnews.util.PageListGenerator.generateAvailablePageList;
+
+/*
+ * Класс UserService, хранит в себе логику, для работы UserController.
+ * loadUserByUsername - Возращает пользователя, если такого пользователя не существует, выбрасывает исключение,
+ * addUser - Если пользователя с таким username нет, ему присваивается роль USER и он сохраняется в БД,
+ * findAll - Отображает список всех пользователей, на запрошенной пользователем странице,
+ * findUser - Отображает конкретного пользователя, без дополнительной информации, используется для редактирования,
+ * findUserInfo - Отображает конкретного пользователя, поиск осуществляется по username, также подгружается список
+ * статей пользователя,
+ * searchUsers - Отображает пользователей, соответствующих критериям поиска, (поиск осуществляется по имени (username),
+ * changeUsername - Изменяет имя учетной записи, если данное имя не занято, а также правильно введен пароль,
+ * changeSecurityQuestionAndAnswer - Изменяет секретный вопрос и ответ, если правильно введен пароль от учетной записи,
+ * updateUser - Обновляет данные пользователя, с помощью слияния данных с формы, с данными из БД,
+ * deleteUser - Удаляет пользователя из БД.
+ */
 
 @Service
 public class UserService implements UserDetailsService {
